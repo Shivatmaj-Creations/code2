@@ -22,15 +22,15 @@
 
 /* ---------- 1. DESIGN TOKENS ---------- */
 :root {
-  --bg:        #DDEBC8;   /* page background      */
-  --bg-alt:    #C8DDB3;   /* alternate sections   */
-  --card:      #FFFDF8;   /* cards                */
-  --primary:   #2E5E2A;   /* dark forest green    */
+  --bg:        #DDEBC8;
+  --bg-alt:    #C8DDB3;
+  --card:      #FFFDF8;
+  --primary:   #2E5E2A;
   --secondary: #4B8B3B;
-  --accent:    #6FAF4E;   /* leaf green           */
+  --accent:    #6FAF4E;
   --clay:      #A66B3F;
-  --ink:       #1F2A1F;   /* dark text            */
-  --cream:     #F7F6EF;   /* light text           */
+  --ink:       #1F2A1F;
+  --cream:     #F7F6EF;
 
   --radius: 18px;
   --radius-sm: 12px;
@@ -82,7 +82,6 @@ h1, h2, h3 { font-family: var(--h-serif); font-weight: 600; line-height: 1.04; l
 .section-lede { margin-top: 22px; font-size: 1.05rem; color: #47543f; max-width: 56ch; }
 
 /* ---------- 3. TEXTURED BACKGROUND ---------- */
-/* Soft watercolor gradients + faint botanical dots (subtle) */
 body::before {
   content: "";
   position: fixed; inset: 0;
@@ -93,7 +92,7 @@ body::before {
     radial-gradient(70vw 70vw at 50% 120%, rgba(75,139,59,.14), transparent 60%);
   pointer-events: none;
 }
-/* grain / paper texture */
+
 body::after {
   content: "";
   position: fixed; inset: 0;
@@ -193,7 +192,6 @@ body::after {
 .hero__ghost::after { content: ""; position: absolute; left: 0; bottom: -4px; width: 100%; height: 1px; background: var(--cream); transform: scaleX(.3); transform-origin: left; transition: transform .4s var(--ease); }
 .hero__ghost:hover::after { transform: scaleX(1); }
 
-/* hero fade-in helper */
 [data-hero-fade] { opacity: 0; transform: translateY(24px); }
 .is-loaded [data-hero-fade] { opacity: 1; transform: none; transition: opacity 1s var(--ease), transform 1s var(--ease); }
 .is-loaded .hero__eyebrow { transition-delay: .2s; }
@@ -204,7 +202,6 @@ body::after {
 .hero__scroll span { position: absolute; top: 8px; left: 50%; width: 4px; height: 8px; margin-left: -2px; background: var(--cream); border-radius: 3px; animation: scrollDot 1.8s var(--ease) infinite; }
 @keyframes scrollDot { 0% { opacity: 0; transform: translateY(0); } 40% { opacity: 1; } 80% { opacity: 0; transform: translateY(14px); } 100% { opacity: 0; } }
 
-/* floating leaves */
 .leaves { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
 .leaf { position: absolute; width: 26px; height: 26px; opacity: .5;
   background: no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236FAF4E'%3E%3Cpath d='M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66C7.5 17.5 9 15 17 13c-2 3-5 5-8 6 8 1 13-4 13-11 0-1-.5-2-1-3-2 0-4 .5-6 3z'/%3E%3C/svg%3E"); }
@@ -222,8 +219,6 @@ body::after {
 .marquee__track i { color: var(--accent); font-style: normal; }
 @keyframes marquee { to { transform: translateX(-50%); } }
 
-
-
 /* ---------- 10. PRODUCTS & GALLERY ---------- */
 .products { padding: 130px 0; }
 .product-list { display: flex; flex-direction: column; gap: 80px; }
@@ -234,9 +229,10 @@ body::after {
   flex-direction: column;
   gap: 48px;
   position: relative;
+  width: 100%;
+  max-width: 100%;
 }
 
-/* Subtle divider between premium and basic within a group */
 .product-group::after {
   content: "";
   display: block;
@@ -300,10 +296,19 @@ body::after {
   grid-template-columns: 1.05fr .95fr;
   gap: 64px;
   align-items: center;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
 .product:nth-child(even) .product__media { order: 2; }
 
-.product__media { position: relative; }
+.product__media {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
 
 .product__frame {
   position: relative;
@@ -380,6 +385,9 @@ body::after {
   align-items: center;
   gap: 6px;
   margin-top: 14px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .product__thumbs {
@@ -387,17 +395,19 @@ body::after {
   gap: 12px;
   overflow-x: auto;
   scroll-behavior: smooth;
-  scrollbar-width: none;          /* Firefox */
-  -ms-overflow-style: none;       /* IE/Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   flex: 1;
+  min-width: 0;
   padding: 4px 2px;
 }
-.product__thumbs::-webkit-scrollbar { display: none; }  /* Chrome/Safari */
+.product__thumbs::-webkit-scrollbar { display: none; }
 
 .product__thumb {
   flex: 0 0 auto;
-  width: 72px;
-  height: 72px;
+  width: 64px;
+  height: 64px;
+  min-width: 64px;
   border: 2px solid transparent;
   border-radius: var(--radius-sm);
   overflow: hidden;
@@ -423,8 +433,9 @@ body::after {
 /* Carousel arrow buttons */
 .carousel__btn {
   flex: 0 0 auto;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
   border-radius: 50%;
   border: 1px solid rgba(31, 42, 31, 0.15);
   background: var(--card);
@@ -442,8 +453,8 @@ body::after {
   box-shadow: 0 4px 12px rgba(31, 42, 31, 0.18);
 }
 .carousel__btn svg {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
 }
 
 /* ---------- PRODUCT BODY ---------- */
@@ -510,210 +521,30 @@ a.contact__card:hover { transform: translateY(-6px); box-shadow: var(--shadow); 
   html { scroll-behavior: auto; }
   .reveal, [data-hero-fade], .hero__title .line__inner { opacity: 1 !important; transform: none !important; }
 }
-/* =========================================================
-   ADDENDUM: DUAL-VERSION PRODUCT STYLES
-   शिवात्मज – अलंकृत (Premium) + शिवात्मज – सहज (Basic)
-   ========================================================= */
-
-/* ---------- PRODUCT GROUP WRAPPER ---------- */
-.product-group {
-  display: flex;
-  flex-direction: column;
-  gap: 48px;
-  position: relative;
-}
-
-/* Subtle divider between premium and basic within a group */
-.product-group::after {
-  content: "";
-  display: block;
-  width: 60%;
-  max-width: 300px;
-  height: 1px;
-  margin: 0 auto;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(166, 107, 63, 0.25),
-    rgba(166, 107, 63, 0.45),
-    rgba(166, 107, 63, 0.25),
-    transparent
-  );
-  order: 1;
-}
-
-
-
-/* ---------- VERSION BADGE (Label above each card) ---------- */
-.product__version-badge {
-  font-family: var(--h-serif);
-  font-size: 1.05rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-align: center;
-  margin-bottom: 6px;
-  padding: 8px 24px;
-  border-radius: 999px;
-  display: inline-block;
-  width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-  transition: all 0.4s var(--ease);
-}
-
-/* Premium version badge — ornate, golden */
-.product__version-badge--premium {
-  background: linear-gradient(135deg, #fdf3d0 0%, #f9e4a8 40%, #e8c964 100%);
-  color: #6b3a1f;
-  box-shadow:
-    0 2px 12px rgba(200, 155, 60, 0.35),
-    0 0 0 1px rgba(180, 130, 40, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(180, 140, 60, 0.4);
-  font-size: 1.12rem;
-}
-
-/* Basic version badge — simple, understated */
-.product__version-badge--basic {
-  background: rgba(166, 107, 63, 0.08);
-  color: #6b5e4f;
-  border: 1px solid rgba(166, 107, 63, 0.18);
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-/* ---------- PREMIUM FRAME — Ornate, eye-catching ---------- */
-.product__frame--premium {
-  border: 3px solid transparent;
-  background-clip: padding-box;
-  position: relative;
-  box-shadow:
-    0 0 0 4px rgba(200, 155, 60, 0.15),
-    0 0 30px rgba(200, 155, 60, 0.12),
-    0 8px 40px -16px rgba(31, 42, 31, 0.4),
-    var(--shadow-lg);
-  transition: box-shadow 0.5s var(--ease), transform 0.5s var(--ease);
-}
-
-/* Ornate golden border via pseudo-element */
-.product__frame--premium::before {
-  content: "";
-  position: absolute;
-  inset: -6px;
-  border-radius: calc(var(--radius) + 3px);
-  padding: 3px;
-  background: linear-gradient(
-    135deg,
-    #d4a843 0%,
-    #f0d68a 25%,
-    #c9973a 50%,
-    #e8c964 75%,
-    #b8862d 100%
-  );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  z-index: 3;
-  pointer-events: none;
-  opacity: 0.85;
-}
-
-/* Subtle inner glow */
-.product__frame--premium::after {
-  content: "";
-  position: absolute;
-  inset: 3px;
-  border-radius: calc(var(--radius) - 2px);
-  box-shadow: inset 0 0 30px rgba(200, 155, 60, 0.1);
-  z-index: 2;
-  pointer-events: none;
-}
-
-.product__frame--premium:hover {
-  box-shadow:
-    0 0 0 4px rgba(200, 155, 60, 0.25),
-    0 0 50px rgba(200, 155, 60, 0.2),
-    0 12px 48px -20px rgba(31, 42, 31, 0.45),
-    var(--shadow-lg);
-}
-
-/* Premium badge styling */
-.product__badge--premium {
-  background: linear-gradient(135deg, #f9e4a8, #e8c964);
-  color: #5a3018;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  box-shadow: 0 2px 10px rgba(200, 155, 60, 0.3);
-}
-
-/* Premium WhatsApp button — golden accent */
-.product__wa--premium {
-  background: linear-gradient(135deg, #c9973a, #a67c28);
-  box-shadow: 0 4px 16px rgba(180, 130, 40, 0.3);
-}
-.product__wa--premium:hover {
-  background: linear-gradient(135deg, #d4a843, #b8862d);
-  box-shadow: 0 6px 22px rgba(180, 130, 40, 0.4);
-}
-
-/* ---------- BASIC FRAME — Clean, simple ---------- */
-/* (Uses existing .product__frame styles — no extra ornamentation) */
-
-/* ---------- PRODUCT GROUP SPACING OVERRIDE ---------- */
-.product-list > .product-group {
-  margin-bottom: 40px;
-}
-
-/* Remove default product-list gap since groups handle their own spacing */
-.product-list {
-  gap: 80px;
-}
-
-/* ---------- RESPONSIVE ADJUSTMENTS ---------- */
-@media (max-width: 980px) {
-  .product-group {
-    gap: 36px;
-  }
-  .product-group::after {
-    width: 50%;
-  }
-  .product__version-badge {
-    font-size: 0.95rem;
-  }
-  .product__version-badge--premium {
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 720px) {
-  .product-group {
-    gap: 28px;
-  }
-  .product-group::after {
-    width: 70%;
-  }
-  .product__version-badge {
-    font-size: 0.88rem;
-    padding: 6px 18px;
-  }
-  .product__version-badge--premium {
-    font-size: 0.95rem;
-  }
-  .product__frame--premium::before {
-    inset: -4px;
-    padding: 2px;
-  }
-}
 
 /* ---------- 15. RESPONSIVE ---------- */
 @media (max-width: 980px) {
   .manifesto__grid { grid-template-columns: 1fr; gap: 20px; }
   .features { grid-template-columns: repeat(2, 1fr); }
   .contact__grid { grid-template-columns: repeat(2, 1fr); }
-  .product { grid-template-columns: 1fr; gap: 34px; }
+  .product {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    overflow: visible;
+  }
   .product:nth-child(even) .product__media { order: 0; }
   .product__body { max-width: none; }
   .product-list { gap: 90px; }
+  .product-group { gap: 36px; }
+  .product-group::after { width: 50%; }
+  .product__version-badge { font-size: 0.95rem; }
+  .product__version-badge--premium { font-size: 1rem; }
+  .product__carousel { width: 100%; }
+  .product__thumb {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+  }
 }
 
 @media (max-width: 720px) {
@@ -728,4 +559,20 @@ a.contact__card:hover { transform: translateY(-6px); box-shadow: var(--shadow); 
   .hero__content { padding-bottom: 16vh; }
   .marquee__track span { font-size: 1.3rem; }
   .footer__inner { flex-direction: column; text-align: center; }
+  .product-group { gap: 28px; }
+  .product-group::after { width: 70%; }
+  .product__version-badge {
+    font-size: 0.88rem;
+    padding: 6px 18px;
+  }
+  .product__version-badge--premium { font-size: 0.95rem; }
+  .product__frame--premium::before {
+    inset: -4px;
+    padding: 2px;
+  }
+  .product__thumb {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+  }
 }
