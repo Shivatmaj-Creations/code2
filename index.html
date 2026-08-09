@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#2E5E2A" />
+  <meta name="description" content="Shivatmaj Creations — beautiful handcrafted eco-friendly Ganesha idols made from natural clay. Celebrate Ganesh Chaturthi, celebrate nature." />
+  <title>Shivatmaj Creations — Handcrafted Eco-Friendly Ganesha Idols</title>
+
+  <!-- Google Fonts (only external dependency) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ================= PAGE LOADER ================= -->
+  <div class="loader" id="loader" data-testid="page-loader" aria-hidden="true">
+    <span class="loader__mark">॥ श्री ॥</span>
+    <span class="loader__text">Shivatmaj Creations</span>
+  </div>
+
+  <!-- ================= HEADER / NAVBAR ================= -->
+  <header class="nav" id="nav" data-testid="main-navbar">
+    <div class="nav__inner">
+      <a href="#home" class="nav__brand" data-testid="nav-brand-logo" aria-label="Shivatmaj Creations home">
+        <span class="nav__logo" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 29c7-4 11-9 11-16 0-2-1-4-3-4-3 0-5 3-8 3s-5-3-8-3c-2 0-3 2-3 4 0 7 4 12 11 16z"/>
+            <path d="M16 12v13"/>
+          </svg>
+        </span>
+        <span class="nav__brandtext">
+          <strong>Shivatmaj Creations</strong>
+          <em>Handcrafted · Eco · Clay</em>
+        </span>
+      </a>
+
+      <nav class="nav__links" aria-label="Primary">
+        <a href="#products" class="nav__link" data-testid="nav-link-products">Products</a>
+        <a href="#about" class="nav__link" data-testid="nav-link-about">About</a>
+        <a href="#contact" class="nav__link" data-testid="nav-link-contact">Contact</a>
+        <a href="#products" class="btn btn--pill nav__cta" data-testid="nav-cta-explore">Explore</a>
+      </nav>
+
+      <button class="nav__toggle" id="navToggle" data-testid="nav-mobile-toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <!-- Mobile menu -->
+    <div class="nav__mobile" id="navMobile" data-testid="nav-mobile-menu">
+      <a href="#products" class="nav__mlink" data-testid="nav-mobile-products">Products</a>
+      <a href="#about" class="nav__mlink" data-testid="nav-mobile-about">About</a>
+      <a href="#contact" class="nav__mlink" data-testid="nav-mobile-contact">Contact</a>
+    </div>
+  </header>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero" id="home" data-testid="hero-section">
+    <div class="hero__media" data-parallax>
+      <img
+        src="images/hero.png"
+        alt="Handcrafted eco-friendly clay Ganesha idol surrounded by fresh flowers"
+        loading="eager" fetchpriority="high" />
+      <div class="hero__overlay"></div>
+    </div>
+
+    <!-- Floating leaves (decorative) -->
+    <div class="leaves" aria-hidden="true">
+      <span class="leaf leaf--1"></span>
+      <span class="leaf leaf--2"></span>
+      <span class="leaf leaf--3"></span>
+      <span class="leaf leaf--4"></span>
+      <span class="leaf leaf--5"></span>
+    </div>
+
+    <div class="hero__content">
+      <p class="hero__eyebrow" data-hero-fade>Natural clay · Made by hand · Returns to the earth</p>
+      <h1 class="hero__title">
+        <span class="line"><span class="line__inner">Celebrate Ganesh Chaturthi,</span></span>
+        <span class="line"><span class="line__inner"><em>Celebrate Nature.</em></span></span>
+      </h1>
+      <p class="hero__sub" data-hero-fade>
+        Beautiful handcrafted eco-friendly Ganesha idols made from natural clay —
+        shaped slowly, blessed simply, and kind to the water that carries them home.
+      </p>
+      <div class="hero__actions" data-hero-fade>
+        <a href="#products" class="btn btn--lg" data-testid="hero-explore-btn">Explore Collection</a>
+        <a href="#about" class="hero__ghost" data-testid="hero-story-link">Our story</a>
+      </div>
+    </div>
+
+    <a href="#products" class="hero__scroll" aria-label="Scroll to collection" data-testid="hero-scroll-cue">
+      <span></span>
+    </a>
+  </section>
+
+  <!-- ================= MARQUEE (editorial) ================= -->
+  <div class="marquee" data-testid="brand-marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <span>Natural Clay</span><i>✦</i><span>Water Soluble</span><i>✦</i><span>Handmade</span><i>✦</i><span>Nature Friendly</span><i>✦</i>
+      <span>Natural Clay</span><i>✦</i><span>Water Soluble</span><i>✦</i><span>Handmade</span><i>✦</i><span>Nature Friendly</span><i>✦</i>
+    </div>
+  </div>
+
+
+  <!-- ================= PRODUCTS ================= -->
+  <section class="products" id="products" data-testid="products-section">
+    <div class="wrap">
+      <header class="section-head reveal">
+        <p class="kicker">The Collection</p>
+        <h2 class="section-title">Idols, quietly made.</h2>
+        <p class="section-lede">A small, considered range. Each piece is hand-sculpted from natural clay and finished with earthen tones.</p>
+      </header>
+
+      <!-- Product cards are injected by script.js from the PRODUCTS array -->
+      <div id="productList" class="product-list" data-testid="product-list"></div>
+    </div>
+  </section>
+
+  <!-- ================= ABOUT / FEATURES ================= -->
+  <section class="about" id="about" data-testid="about-section">
+    <div class="wrap">
+      <header class="section-head reveal">
+        <p class="kicker">Why choose us</p>
+        <h2 class="section-title">Why Choose Eco-Friendly Ganesha?</h2>
+      </header>
+
+      <div class="features">
+        <article class="feature reveal" data-testid="feature-natural-clay">
+          <span class="feature__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/></svg>
+          </span>
+          <h3>Natural Clay</h3>
+          <p>Sourced pure riverbed clay — free from plaster of Paris and toxic additives.</p>
+        </article>
+
+        <article class="feature reveal" data-testid="feature-water-soluble">
+          <span class="feature__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5S5 13 5 15a7 7 0 0 0 7 7Z"/></svg>
+          </span>
+          <h3>Water Soluble</h3>
+          <p>Dissolves gently during visarjan, returning safely to rivers and soil.</p>
+        </article>
+
+        <article class="feature reveal" data-testid="feature-handmade">
+          <span class="feature__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2 2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+          </span>
+          <h3>Handmade</h3>
+          <p>Sculpted individually by skilled artisans — every idol is one of a kind.</p>
+        </article>
+
+        <article class="feature reveal" data-testid="feature-nature-friendly">
+          <span class="feature__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </span>
+          <h3>Nature Friendly</h3>
+          <p>Zero pollution, zero harm — a celebration that honours the earth.</p>
+        </article>
+      </div>
+
+      <p class="about__note reveal">
+        We believe devotion and nature belong together. By choosing clay over plaster,
+        you keep our waters clean, support artisan families, and let the spirit of
+        Ganesh Chaturthi remain as pure as the intention behind it.
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= CONTACT ================= -->
+  <section class="contact" id="contact" data-testid="contact-section">
+    <div class="wrap">
+      <header class="section-head reveal">
+        <p class="kicker">Reach us</p>
+        <h2 class="section-title">Let's bring Bappa home.</h2>
+        <p class="section-lede">Message us on WhatsApp for availability, custom sizes and bulk orders.</p>
+      </header>
+
+      <div class="contact__grid">
+        <a class="contact__card reveal" href="Phone:+919893434297" data-testid="contact-phone">
+          <span class="contact__label">Phone</span>
+          <span class="contact__value">+91 9893434297</span>
+        </a>
+        <a class="contact__card reveal" href="https://wa.me/919893434297" target="_blank" rel="noopener" data-testid="contact-whatsapp">
+          <span class="contact__label">WhatsApp</span>
+          <span class="contact__value">Chat with us</span>
+        </a>
+        <a class="contact__card reveal" href="https://instagram.com/mittigajanan" target="_blank" rel="noopener" data-testid="contact-instagram">
+          <span class="contact__label">Instagram</span>
+          <span class="contact__value">Coming soon</span>
+        </a>
+        <a class="contact__card reveal" href="mailto:lihankarkhush@gmail.com" data-testid="contact-email">
+          <span class="contact__label">Email</span>
+          <span class="contact__value">Shivatmaj_Creations</span>
+        </a>
+        <div class="contact__card reveal" data-testid="contact-location">
+          <span class="contact__label">Location</span>
+          <span class="contact__value">Yeshwant Niwas Road, Indore, Madhya Pradesh</span>
+        </div>
+        <a class="contact__card contact__card--map reveal" href="https://maps.app.goo.gl/TaZpaEcxyXkNLW296?g_st=aw" target="_blank" rel="noopener" data-testid="contact-maps-btn">
+          <span class="contact__label">Find the studio</span>
+          <span class="contact__value">Open in Google Maps →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer" data-testid="main-footer">
+    <div class="wrap footer__inner">
+      <span class="footer__brand">Shivatmaj Creations</span>
+      <span class="footer__tag">Celebrate with Nature.</span>
+      <span class="footer__copy">© <span id="year"></span> Shivatmaj Creations. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html> 
