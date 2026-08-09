@@ -1,4 +1,4 @@
-const WHATSAPP_NUMBER = "919893434297"; // country code + number, no "+" or spaces
+const WHATSAPP_NUMBER = "919893434297";
 
 const PRODUCTS = [
   {
@@ -238,7 +238,6 @@ function renderProducts() {
   if (!list) return;
   list.innerHTML = PRODUCTS.map(productMarkup).join("");
 
-  // Initialize carousels and thumbnail clicks for each product card
   list.querySelectorAll(".product").forEach((card) => {
     const idx = Number(card.dataset.product);
     const main = card.querySelector(".product__main");
@@ -247,7 +246,6 @@ function renderProducts() {
     const prevBtn = card.querySelector(".carousel__btn--prev");
     const nextBtn = card.querySelector(".carousel__btn--next");
 
-    // Thumbnail click → swap main image
     thumbs.forEach((thumb) => {
       thumb.addEventListener("click", () => {
         const i = Number(thumb.dataset.index);
@@ -263,15 +261,13 @@ function renderProducts() {
         thumbs.forEach((t) => t.classList.remove("is-active"));
         thumb.classList.add("is-active");
 
-        // Scroll the clicked thumb into view
         thumb.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
       });
     });
 
-    // Carousel arrow buttons
     const scrollAmount = () => {
-      const thumbWidth = thumbs[0]?.offsetWidth || 80;
-      const gap = 14;
+      const thumbWidth = thumbs[0]?.offsetWidth || 64;
+      const gap = 12;
       return thumbWidth + gap;
     };
 
@@ -283,7 +279,6 @@ function renderProducts() {
       thumbsContainer.scrollBy({ left: scrollAmount() * 2, behavior: "smooth" });
     });
 
-    // Update button visibility based on scroll position
     const updateBtnVisibility = () => {
       const tolerance = 4;
       const atStart = thumbsContainer.scrollLeft <= tolerance;
@@ -302,7 +297,7 @@ function renderProducts() {
 }
 
 /* ---------------------------------------------------------
-   3. NAVBAR — solid on scroll + mobile menu
+   3. NAVBAR
 --------------------------------------------------------- */
 function initNavbar() {
   const nav = document.getElementById("nav");
@@ -351,7 +346,7 @@ function initReveal() {
 }
 
 /* ---------------------------------------------------------
-   5. HERO PARALLAX (subtle, rAF-throttled)
+   5. HERO PARALLAX
 --------------------------------------------------------- */
 function initParallax() {
   const media = document.querySelector("[data-parallax]");
@@ -384,7 +379,6 @@ function initLoader() {
     if (loader) setTimeout(() => loader.classList.add("is-done"), 400);
   };
   window.addEventListener("load", () => setTimeout(done, 500));
-  // Safety fallback if 'load' is delayed
   setTimeout(done, 2500);
 }
 
