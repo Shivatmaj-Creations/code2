@@ -7,7 +7,6 @@
   <meta name="description" content="Shivatmaj Creations — beautiful handcrafted eco-friendly Ganesha idols made from natural clay. Celebrate Ganesh Chaturthi, celebrate nature." />
   <title>Shivatmaj Creations — Handcrafted Eco-Friendly Ganesha Idols</title>
 
-  <!-- Google Fonts (only external dependency) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -16,13 +15,11 @@
 </head>
 <body>
 
-  <!-- ================= PAGE LOADER ================= -->
   <div class="loader" id="loader" data-testid="page-loader" aria-hidden="true">
     <span class="loader__mark">॥ श्री ॥</span>
     <span class="loader__text">Shivatmaj Creations</span>
   </div>
 
-  <!-- ================= HEADER / NAVBAR ================= -->
   <header class="nav" id="nav" data-testid="main-navbar">
     <div class="nav__inner">
       <a href="#home" class="nav__brand" data-testid="nav-brand-logo" aria-label="Shivatmaj Creations home">
@@ -50,7 +47,6 @@
       </button>
     </div>
 
-    <!-- Mobile menu -->
     <div class="nav__mobile" id="navMobile" data-testid="nav-mobile-menu">
       <a href="#products" class="nav__mlink" data-testid="nav-mobile-products">Products</a>
       <a href="#about" class="nav__mlink" data-testid="nav-mobile-about">About</a>
@@ -58,17 +54,12 @@
     </div>
   </header>
 
-  <!-- ================= HERO ================= -->
   <section class="hero" id="home" data-testid="hero-section">
     <div class="hero__media" data-parallax>
-      <img
-        src="images/hero.png"
-        alt="Handcrafted eco-friendly clay Ganesha idol surrounded by fresh flowers"
-        loading="eager" fetchpriority="high" />
+      <img src="images/hero.png" alt="Handcrafted eco-friendly clay Ganesha idol surrounded by fresh flowers" loading="eager" fetchpriority="high" />
       <div class="hero__overlay"></div>
     </div>
 
-    <!-- Floating leaves (decorative) -->
     <div class="leaves" aria-hidden="true">
       <span class="leaf leaf--1"></span>
       <span class="leaf leaf--2"></span>
@@ -98,7 +89,6 @@
     </a>
   </section>
 
-  <!-- ================= MARQUEE (editorial) ================= -->
   <div class="marquee" data-testid="brand-marquee" aria-hidden="true">
     <div class="marquee__track">
       <span>Natural Clay</span><i>✦</i><span>Water Soluble</span><i>✦</i><span>Handmade</span><i>✦</i><span>Nature Friendly</span><i>✦</i>
@@ -106,8 +96,6 @@
     </div>
   </div>
 
-
-  <!-- ================= PRODUCTS ================= -->
   <section class="products" id="products" data-testid="products-section">
     <div class="wrap">
       <header class="section-head reveal">
@@ -116,12 +104,10 @@
         <p class="section-lede">A small, considered range. Each piece is hand-sculpted from natural clay and finished with earthen tones.</p>
       </header>
 
-      <!-- Product cards are injected by script.js from the PRODUCTS array -->
       <div id="productList" class="product-list" data-testid="product-list"></div>
     </div>
   </section>
 
-  <!-- ================= ABOUT / FEATURES ================= -->
   <section class="about" id="about" data-testid="about-section">
     <div class="wrap">
       <header class="section-head reveal">
@@ -171,7 +157,6 @@
     </div>
   </section>
 
-  <!-- ================= CONTACT ================= -->
   <section class="contact" id="contact" data-testid="contact-section">
     <div class="wrap">
       <header class="section-head reveal">
@@ -209,7 +194,6 @@
     </div>
   </section>
 
-  <!-- ================= FOOTER ================= -->
   <footer class="footer" data-testid="main-footer">
     <div class="wrap footer__inner">
       <span class="footer__brand">Shivatmaj Creations</span>
@@ -220,4 +204,4 @@
 
   <script src="script.js"></script>
 </body>
-</html> 
+</html>
