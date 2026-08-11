@@ -392,3 +392,178 @@ document.addEventListener("DOMContentLoaded", () => {
   initParallax();
   initLoader();
 });
+/* =========================================================
+   7. ANALYTICS — Supabase Backend (Real-time Dashboard)
+   ========================================================= */
+const SUPABASE_URL = "https://tjybmzdrmonbgqmyvrcr.supabase.co";     // ← Replace
+const SUPABASE_KEY = "sb_publishable_58LzlRjRPKWU2S8ZPL4VLA_1Re2RQLi";              // ← Replace
+
+function initAnalytics() {
+  const sessionId = generateSessionId();
+  const device = getDeviceType();
+  const referrer = document.referrer 
+    ? new URL(document.referrer).hostname.replace("www.", "") 
+    : "direct";
+  
+  // Track page view immediately
+  sendEvent({
+    type: "pageview",
+    product_name: "",
+    version: "",
+    value: 1,
+    referrer: referrer,
+    device: device,
+    session_id: sessionId,
+    page_url: window.location.pathname,
+  });
+  
+  // Track product views on scroll
+  trackProductViews(sessionId, referrer, device);
+  
+  // Track WhatsApp clicks
+  trackWhatsAppClicks(sessionId, referrer, device);
+  
+  // Track contact clicks
+  trackContactClicks(sessionId, referrer, device);
+  
+  // Track scroll depth
+  trackScrollDepth(sessionId, referrer, device);
+}
+
+async function sendEvent(data) {
+  try {
+    // Try to get country from IP (free service, no API key needed)
+    if (!data.country) {
+      try {
+        const geoRes = await fetch("https://ipapi.co/json/");
+        const geo = await geoRes.json();
+        data.country = geo.country_name || "";
+      } catch(e) {}
+    }
+    
+    await fetch(`${SUPABASE_URL}/rest/v1/analytics`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`,
+        "Prefer": "return=minimal",
+      },
+      body: JSON.stringify(data),
+    });
+  } catch (e) {
+    // Fail silently
+  }
+}
+
+function generateSessionId() {
+  return "s_" + Date.now().toString(36) + "_" + Math.random().toString(36).substr(2, 6);
+}
+
+function getDeviceType() {
+  const ua = navigator.userAgent;
+  if (/tablet|ipad|playbook|silk/i.test(ua)) return "tablet";
+  if (/mobile|iphone|ipod|android.*mobile|blackberry|opera mini/i.test(ua)) return "mobile";
+  return "desktop";
+}
+
+function trackProductViews(sessionId, referrer, device) {
+  const tracked = new Set();
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const productEl = entry.target;
+        const productName = productEl.querySelector(".product__name")?.textContent?.trim() || "Unknown";
+        const version = productEl.classList.contains("product--premium") ? "Premium" : "Basic";
+        const key = `${productName}_${version}`;
+        
+        if (!tracked.has(key)) {
+          tracked.add(key);
+          sendEvent({
+            type: "product_view",
+            product_name: productName,
+            version: version,
+            value: 1,
+            referrer: referrer,
+            device: device,
+            session_id: sessionId,
+            page_url: window.location.pathname,
+          });
+        }
+      }
+    });
+  }, { threshold: 0.3 });
+  
+  setTimeout(() => {
+    document.querySelectorAll(".product").forEach(el => observer.observe(el));
+  }, 1000);
+}
+
+function trackWhatsAppClicks(sessionId, referrer, device) {
+  document.addEventListener("click", (e) => {
+    const waLink = e.target.closest("a[href*='wa.me']");
+    if (waLink) {
+      const productCard = waLink.closest(".product");
+      const productName = productCard?.querySelector(".product__name")?.textContent?.trim() || "Unknown";
+      const version = productCard?.classList.contains("product--premium") ? "Premium" : "Basic";
+      
+      sendEvent({
+        type: "whatsapp_click",
+        product_name: productName,
+        version: version,
+        value: 1,
+        referrer: referrer,
+        device: device,
+        session_id: sessionId,
+        page_url: window.location.pathname,
+      });
+    }
+  });
+}
+
+function trackContactClicks(sessionId, referrer, device) {
+  document.addEventListener("click", (e) => {
+    const contactLink = e.target.closest("[data-testid*='contact-']");
+    if (contactLink) {
+      const type = contactLink.dataset.testid?.replace("contact-", "") || "unknown";
+      
+      sendEvent({
+        type: "contact_click",
+        product_name: type,
+        version: "",
+        value: 1,
+        referrer: referrer,
+        device: device,
+        session_id: sessionId,
+        page_url: window.location.pathname,
+      });
+    }
+  });
+}
+
+function trackScrollDepth(sessionId, referrer, device) {
+  const milestones = new Set();
+  const checkScroll = () => {
+    const percent = Math.round(
+      (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100
+    );
+    [25, 50, 75, 100].forEach(m => {
+      if (percent >= m && !milestones.has(m)) {
+        milestones.add(m);
+        sendEvent({
+          type: "scroll_depth",
+          product_name: "",
+          version: "",
+          value: m,
+          referrer: referrer,
+          device: device,
+          session_id: sessionId,
+          page_url: window.location.pathname,
+        });
+      }
+    });
+  };
+  
+  window.addEventListener("scroll", checkScroll, { passive: true });
+}
