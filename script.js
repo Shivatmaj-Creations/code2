@@ -2,40 +2,44 @@ const WHATSAPP_NUMBER = "919893434297";
 const SUPABASE_URL = "https://tjybmzdrmonbgqmyvrcr.supabase.co";
 const SUPABASE_KEY = "sb_publishable_58LzlRjRPKWU2S8ZPL4VLA_1Re2RQLi";
 
-// ==================== ANALYTICS (at the top so it fires immediately) ====================
+// ==================== ANALYTICS ====================
 const ANALYTICS_SESSION = "s_" + Date.now().toString(36) + "_" + Math.random().toString(36).substr(2, 6);
 
+// Keep track of what we've already counted THIS session
+const sessionTracking = {
+  pageViewSent: false,
+  productsViewed: new Set(),    // "productName_version" strings
+  scrollMilestones: new Set(),  // 25, 50, 75, 100
+  device: "",
+  country: "",
+};
+
 function getDevice() {
+  if (sessionTracking.device) return sessionTracking.device;
   const ua = navigator.userAgent;
-  if (/mobile|iphone|ipod|android.*mobile/i.test(ua)) return "mobile";
-  if (/tablet|ipad/i.test(ua)) return "tablet";
-  return "desktop";
+  if (/mobile|iphone|ipod|android.*mobile/i.test(ua)) sessionTracking.device = "mobile";
+  else if (/tablet|ipad/i.test(ua)) sessionTracking.device = "tablet";
+  else sessionTracking.device = "desktop";
+  return sessionTracking.device;
 }
 
 async function getCountry() {
+  if (sessionTracking.country) return sessionTracking.country;
   try {
     const res = await fetch("https://ipapi.co/json/");
     const data = await res.json();
-    return data.country_name || "";
-  } catch(e) { return ""; }
+    sessionTracking.country = data.country_name || "Unknown";
+  } catch(e) { sessionTracking.country = "Unknown"; }
+  return sessionTracking.country;
 }
 
-function sendAnalytics(type, productName, version, value) {
-  const data = {
-    type: type,
-    product_name: productName || "",
-    version: version || "",
-    value: value || 1,
-    referrer: document.referrer ? new URL(document.referrer).hostname.replace("www.", "") : "direct",
-    device: getDevice(),
-    session_id: ANALYTICS_SESSION,
-    page_url: window.location.pathname,
-    country: "",
-  };
-  
-  // Send async (don't block page)
+const referrer = document.referrer ? new URL(document.referrer).hostname.replace("www.", "") : "direct";
+const device = getDevice();
+
+// Only send page view ONCE per session
+if (!sessionTracking.pageViewSent) {
+  sessionTracking.pageViewSent = true;
   getCountry().then(country => {
-    data.country = country;
     fetch(`${SUPABASE_URL}/rest/v1/analytics`, {
       method: "POST",
       headers: {
@@ -44,67 +48,95 @@ function sendAnalytics(type, productName, version, value) {
         "Authorization": `Bearer ${SUPABASE_KEY}`,
         "Prefer": "return=minimal",
       },
-      body: JSON.stringify(data),
-    }).catch(() => {});
-  }).catch(() => {
-    fetch(`${SUPABASE_URL}/rest/v1/analytics`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "apikey": SUPABASE_KEY,
-        "Authorization": `Bearer ${SUPABASE_KEY}`,
-        "Prefer": "return=minimal",
-      },
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        type: "pageview",
+        product_name: "",
+        version: "",
+        value: 1,
+        referrer: referrer,
+        device: device,
+        session_id: ANALYTICS_SESSION,
+        page_url: window.location.pathname,
+        country: country,
+      }),
     }).catch(() => {});
   });
 }
 
-// Track page view immediately
-sendAnalytics("pageview", "", "", 1);
+// Generic send function — only sends if not already tracked in this session
+function sendEvent(type, productName, version, value, dedupeKey) {
+  // If dedupeKey provided and already tracked, skip
+  if (dedupeKey && sessionTracking[dedupeKey]?.has?.(`${productName}_${version}_${value}`)) return;
+  if (dedupeKey) sessionTracking[dedupeKey].add(`${productName}_${version}_${value}`);
+  
+  getCountry().then(country => {
+    fetch(`${SUPABASE_URL}/rest/v1/analytics`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`,
+        "Prefer": "return=minimal",
+      },
+      body: JSON.stringify({
+        type: type,
+        product_name: productName || "",
+        version: version || "",
+        value: value || 1,
+        referrer: referrer,
+        device: device,
+        session_id: ANALYTICS_SESSION,
+        page_url: window.location.pathname,
+        country: country,
+      }),
+    }).catch(() => {});
+  });
+}
 
-// Track product views when visible
-const viewedProducts = new Set();
+// Product view observer — fires ONCE per product per session
 const productObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting && entry.target.dataset.product) {
       const card = entry.target;
       const name = card.querySelector(".product__name")?.textContent?.trim() || "Unknown";
       const version = card.classList.contains("product--premium") ? "Premium" : "Basic";
-      const key = name + "_" + version;
-      if (!viewedProducts.has(key)) {
-        viewedProducts.add(key);
-        sendAnalytics("product_view", name, version, 1);
+      const key = `${name}_${version}`;
+      
+      if (!sessionTracking.productsViewed.has(key)) {
+        sessionTracking.productsViewed.add(key);
+        sendEvent("product_view", name, version, 1, null);
       }
+      
+      // Stop observing once tracked
+      productObserver.unobserve(entry.target);
     }
   });
 }, { threshold: 0.3 });
 
-// Track WhatsApp clicks
+// WhatsApp & Contact click tracking (fires every click — that's correct)
 document.addEventListener("click", (e) => {
   const waLink = e.target.closest("a[href*='wa.me']");
   if (waLink) {
     const card = waLink.closest(".product");
     const name = card?.querySelector(".product__name")?.textContent?.trim() || "Unknown";
     const version = card?.classList.contains("product--premium") ? "Premium" : "Basic";
-    sendAnalytics("whatsapp_click", name, version, 1);
+    sendEvent("whatsapp_click", name, version, 1, null); // Always track clicks
   }
   
   const contactLink = e.target.closest("[data-testid*='contact-']");
   if (contactLink) {
     const type = contactLink.dataset.testid?.replace("contact-", "") || "unknown";
-    sendAnalytics("contact_click", type, "", 1);
+    sendEvent("contact_click", type, "", 1, null); // Always track clicks
   }
 });
 
-// Track scroll depth
-const scrollMilestones = new Set();
+// Scroll depth — ONCE per milestone per session
 window.addEventListener("scroll", () => {
   const percent = Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100);
   [25, 50, 75, 100].forEach(m => {
-    if (percent >= m && !scrollMilestones.has(m)) {
-      scrollMilestones.add(m);
-      sendAnalytics("scroll_depth", "", "", m);
+    if (percent >= m && !sessionTracking.scrollMilestones.has(m)) {
+      sessionTracking.scrollMilestones.add(m);
+      sendEvent("scroll_depth", "", "", m, null);
     }
   });
 }, { passive: true });
@@ -276,7 +308,7 @@ function renderProducts() {
   if (!list) return;
   list.innerHTML = PRODUCTS.map(productMarkup).join("");
 
-  // Start observing new product cards for analytics
+  // Start observing new product cards (each card tracked ONCE, then unobserved)
   setTimeout(() => {
     document.querySelectorAll(".product").forEach(el => productObserver.observe(el));
   }, 500);
