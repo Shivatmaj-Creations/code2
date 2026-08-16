@@ -5,11 +5,10 @@ const SUPABASE_KEY = "sb_publishable_58LzlRjRPKWU2S8ZPL4VLA_1Re2RQLi";
 // ==================== ANALYTICS ====================
 const ANALYTICS_SESSION = "s_" + Date.now().toString(36) + "_" + Math.random().toString(36).substr(2, 6);
 
-// Keep track of what we've already counted THIS session
 const sessionTracking = {
   pageViewSent: false,
-  productsViewed: new Set(),    // "productName_version" strings
-  scrollMilestones: new Set(),  // 25, 50, 75, 100
+  productsViewed: new Set(),
+  scrollMilestones: new Set(),
   device: "",
   country: "",
 };
@@ -36,7 +35,6 @@ async function getCountry() {
 const referrer = document.referrer ? new URL(document.referrer).hostname.replace("www.", "") : "direct";
 const device = getDevice();
 
-// Only send page view ONCE per session
 if (!sessionTracking.pageViewSent) {
   sessionTracking.pageViewSent = true;
   getCountry().then(country => {
@@ -63,12 +61,7 @@ if (!sessionTracking.pageViewSent) {
   });
 }
 
-// Generic send function — only sends if not already tracked in this session
-function sendEvent(type, productName, version, value, dedupeKey) {
-  // If dedupeKey provided and already tracked, skip
-  if (dedupeKey && sessionTracking[dedupeKey]?.has?.(`${productName}_${version}_${value}`)) return;
-  if (dedupeKey) sessionTracking[dedupeKey].add(`${productName}_${version}_${value}`);
-  
+function sendEvent(type, productName, version, value) {
   getCountry().then(country => {
     fetch(`${SUPABASE_URL}/rest/v1/analytics`, {
       method: "POST",
@@ -93,7 +86,6 @@ function sendEvent(type, productName, version, value, dedupeKey) {
   });
 }
 
-// Product view observer — fires ONCE per product per session
 const productObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting && entry.target.dataset.product) {
@@ -101,47 +93,46 @@ const productObserver = new IntersectionObserver((entries) => {
       const name = card.querySelector(".product__name")?.textContent?.trim() || "Unknown";
       const version = card.classList.contains("product--premium") ? "Premium" : "Basic";
       const key = `${name}_${version}`;
-      
       if (!sessionTracking.productsViewed.has(key)) {
         sessionTracking.productsViewed.add(key);
-        sendEvent("product_view", name, version, 1, null);
+        sendEvent("product_view", name, version, 1);
       }
-      
-      // Stop observing once tracked
       productObserver.unobserve(entry.target);
     }
   });
 }, { threshold: 0.3 });
 
-// WhatsApp & Contact click tracking (fires every click — that's correct)
 document.addEventListener("click", (e) => {
   const waLink = e.target.closest("a[href*='wa.me']");
   if (waLink) {
     const card = waLink.closest(".product");
     const name = card?.querySelector(".product__name")?.textContent?.trim() || "Unknown";
     const version = card?.classList.contains("product--premium") ? "Premium" : "Basic";
-    sendEvent("whatsapp_click", name, version, 1, null); // Always track clicks
+    sendEvent("whatsapp_click", name, version, 1);
   }
-  
   const contactLink = e.target.closest("[data-testid*='contact-']");
   if (contactLink) {
     const type = contactLink.dataset.testid?.replace("contact-", "") || "unknown";
-    sendEvent("contact_click", type, "", 1, null); // Always track clicks
+    sendEvent("contact_click", type, "", 1);
   }
 });
 
-// Scroll depth — ONCE per milestone per session
 window.addEventListener("scroll", () => {
   const percent = Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100);
   [25, 50, 75, 100].forEach(m => {
     if (percent >= m && !sessionTracking.scrollMilestones.has(m)) {
       sessionTracking.scrollMilestones.add(m);
-      sendEvent("scroll_depth", "", "", m, null);
+      sendEvent("scroll_depth", "", "", m);
     }
   });
 }, { passive: true });
 
 // ==================== PRODUCTS DATA ====================
+// HOW TO CONTROL VERSIONS:
+//   - "premium" = शिवात्मज – अलंकृत (golden, ornate)
+//   - "basic"   = शिवात्मज – सहज (simple, understated)
+//   - Comment out (/* ... */) the version you DON'T want for each product
+
 const PRODUCTS = [
   {
     name: "Maharaja (महाराजा)",
@@ -150,6 +141,10 @@ const PRODUCTS = [
     price: "₹3,499",
     description: "A serene, seated Bappa finished in warm earthen tones. Compact enough for the home altar, detailed enough to feel truly special.",
     images: ["images/1.1.webp", "images/1.2.webp", "images/1.3.webp", "images/1.4.webp", "images/1.5.webp"],
+    versions: [
+      "premium",
+      "basic",
+    ],
   },
   {
     name: "Dagdusheth (दगडुशेठ)",
@@ -158,6 +153,10 @@ const PRODUCTS = [
     price: "₹2,499",
     description: "An elegant standing form with a flowing drape and gentle expression. Naturally pigmented, entirely free of plaster and chemical paint.",
     images: ["images/2.1.webp", "images/2.2.webp", "images/2.3.webp", "images/2.4.webp"],
+    versions: [
+      "premium",
+      /* "basic", */  // ← Only premium for this idol
+    ],
   },
   {
     name: "Dagdusheth (दगडुशेठ)",
@@ -166,6 +165,10 @@ const PRODUCTS = [
     price: "₹2,499",
     description: "Our statement idol for larger celebrations. Grand proportions, softly detailed ornamentation, and a finish that dissolves cleanly at visarjan.",
     images: ["images/3.1.webp", "images/3.2.webp", "images/3.3.webp"],
+    versions: [
+      "premium",
+      "basic",
+    ],
   },
   {
     name: "Takht Wale Ganesh (तख्त वाले गणेश)",
@@ -174,6 +177,10 @@ const PRODUCTS = [
     price: "₹3,499",
     description: "A little Bappa for desks, cars and gifting. Same honest clay, same handcrafted care — in a gentle, pocket-friendly size.",
     images: ["images/4.1.webp", "images/4.2.webp", "images/4.3.webp"],
+    versions: [
+      /* "premium", */  // ← Only basic for this idol
+      "basic",
+    ],
   },
   {
     name: "Shiv Ke Lal (शिव के लाल)",
@@ -182,6 +189,10 @@ const PRODUCTS = [
     price: "₹1,499",
     description: "A little Bappa for desks, cars and gifting. Same honest clay, same handcrafted care — in a gentle, pocket-friendly size.",
     images: ["images/5.1.webp", "images/5.2.webp", "images/5.3.webp"],
+    versions: [
+      "premium",
+      "basic",
+    ],
   },
   {
     name: "Siddhivinayak (सिद्धिविनायक)",
@@ -190,6 +201,10 @@ const PRODUCTS = [
     price: "₹1,799",
     description: "A little Bappa for desks, cars and gifting. Same honest clay, same handcrafted care — in a gentle, pocket-friendly size.",
     images: ["images/6.1.webp", "images/6.2.webp", "images/6.3.webp"],
+    versions: [
+      "premium",
+      "basic",
+    ],
   },
   {
     name: "Bal Ganesh (बाल गणेश)",
@@ -198,6 +213,10 @@ const PRODUCTS = [
     price: "₹1,499",
     description: "A little Bappa for desks, cars and gifting. Same honest clay, same handcrafted care — in a gentle, pocket-friendly size.",
     images: ["images/7.1.webp", "images/7.2.webp", "images/7.3.webp"],
+    versions: [
+      "premium",
+      "basic",
+    ],
   },
   {
     name: "Ashtavinayak (अष्टविनायक)",
@@ -206,6 +225,10 @@ const PRODUCTS = [
     price: "₹1,099",
     description: "A little Bappa for desks, cars and gifting. Same honest clay, same handcrafted care — in a gentle, pocket-friendly size.",
     images: ["images/8.1.webp", "images/8.2.webp", "images/8.3.webp"],
+    versions: [
+      /* "premium", */
+      "basic",
+    ],
   },
   {
     name: "Gajkarna (गजकर्ण)",
@@ -214,6 +237,10 @@ const PRODUCTS = [
     price: "₹1,499",
     description: "A little Bappa for desks, cars and gifting. Same honest clay, same handcrafted care — in a gentle, pocket-friendly size.",
     images: ["images/9.1.webp", "images/9.2.webp", "images/9.3.webp"],
+    versions: [
+      "premium",
+      "basic",
+    ],
   },
 ];
 
@@ -231,9 +258,12 @@ function productMarkup(p, index) {
       </button>`
     ).join("");
 
-  return `
-  <div class="product-group" data-product-group="${index}">
-    
+  let premiumHTML = "";
+  let basicHTML = "";
+
+  // Build premium version HTML if "premium" is in versions array
+  if (p.versions.includes("premium")) {
+    premiumHTML = `
     <article class="product product--premium reveal" data-product="${index}" data-testid="product-card-${index}-premium">
       <div class="product__version-badge product__version-badge--premium">शिवात्मज – अलंकृत</div>
       <div class="product__media">
@@ -265,8 +295,12 @@ function productMarkup(p, index) {
           </a>
         </div>
       </div>
-    </article>
+    </article>`;
+  }
 
+  // Build basic version HTML if "basic" is in versions array
+  if (p.versions.includes("basic")) {
+    basicHTML = `
     <article class="product product--basic reveal" data-product="${index}" data-testid="product-card-${index}-basic">
       <div class="product__version-badge product__version-badge--basic">शिवात्मज – सहज</div>
       <div class="product__media">
@@ -298,8 +332,13 @@ function productMarkup(p, index) {
           </a>
         </div>
       </div>
-    </article>
+    </article>`;
+  }
 
+  return `
+  <div class="product-group" data-product-group="${index}">
+    ${premiumHTML}
+    ${basicHTML}
   </div>`;
 }
 
@@ -308,12 +347,10 @@ function renderProducts() {
   if (!list) return;
   list.innerHTML = PRODUCTS.map(productMarkup).join("");
 
-  // Start observing new product cards (each card tracked ONCE, then unobserved)
   setTimeout(() => {
     document.querySelectorAll(".product").forEach(el => productObserver.observe(el));
   }, 500);
 
-  // Carousel logic
   list.querySelectorAll(".product").forEach((card) => {
     const idx = Number(card.dataset.product);
     const main = card.querySelector(".product__main");
