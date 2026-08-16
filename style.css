@@ -293,7 +293,6 @@ body::after {
   position: relative;
 }
 
-/* Subtle shimmer on premium badge */
 .product__version-badge--premium::after {
   content: "";
   position: absolute;
@@ -325,7 +324,7 @@ body::after {
   letter-spacing: 0.04em;
 }
 
-/* ---------- PRODUCT CARD LAYOUT ---------- */
+/* ---------- PRODUCT CARD LAYOUT — CONSISTENT: Image LEFT, Text RIGHT ---------- */
 .product {
   display: grid;
   grid-template-columns: 1.05fr .95fr;
@@ -335,7 +334,10 @@ body::after {
   max-width: 100%;
   overflow: hidden;
 }
-.product:nth-child(even) .product__media { order: 2; }
+
+/* ALWAYS: Media (image) on LEFT, Body (text) on RIGHT */
+.product__media { order: 1; }
+.product__body { order: 2; }
 
 .product__media {
   position: relative;
@@ -362,15 +364,30 @@ body::after {
 .product__frame:hover img { transform: scale(1.05); }
 .product__main.is-fading { opacity: 0; }
 
-/* ---------- PREMIUM FRAME — Ornate golden ---------- */
+/* ---------- PREMIUM FRAME — Ornate golden with animated GLOW ---------- */
 .product__frame--premium {
   position: relative;
-  box-shadow:
-    0 0 0 6px rgba(200, 155, 60, 0.12),
-    0 0 40px rgba(200, 155, 60, 0.15),
-    0 8px 48px -16px rgba(31, 42, 31, 0.35),
-    var(--shadow-lg);
   background: var(--card);
+  animation: premiumGlow 3s ease-in-out infinite;
+}
+
+@keyframes premiumGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 18px rgba(200, 155, 60, 0.35),
+      0 0 38px rgba(200, 155, 60, 0.22),
+      0 0 70px rgba(200, 155, 60, 0.12),
+      0 8px 48px -16px rgba(31, 42, 31, 0.35),
+      var(--shadow-lg);
+  }
+  50% {
+    box-shadow:
+      0 0 28px rgba(200, 155, 60, 0.5),
+      0 0 55px rgba(200, 155, 60, 0.32),
+      0 0 95px rgba(200, 155, 60, 0.2),
+      0 8px 48px -16px rgba(31, 42, 31, 0.35),
+      var(--shadow-lg);
+  }
 }
 
 .product__frame--premium::before {
@@ -393,7 +410,13 @@ body::after {
   mask-composite: exclude;
   z-index: 3;
   pointer-events: none;
-  opacity: 0.9;
+  opacity: 0.85;
+  animation: borderPulse 3s ease-in-out infinite;
+}
+
+@keyframes borderPulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
 }
 
 .product__frame--premium::after {
@@ -401,21 +424,19 @@ body::after {
   position: absolute;
   inset: 4px;
   border-radius: calc(var(--radius) - 2px);
-  box-shadow: inset 0 0 40px rgba(200, 155, 60, 0.08);
+  box-shadow: inset 0 0 40px rgba(200, 155, 60, 0.1);
   z-index: 2;
   pointer-events: none;
 }
 
 .product__frame--premium:hover {
+  animation: none;
   box-shadow:
-    0 0 0 6px rgba(200, 155, 60, 0.2),
-    0 0 60px rgba(200, 155, 60, 0.22),
+    0 0 32px rgba(200, 155, 60, 0.55),
+    0 0 70px rgba(200, 155, 60, 0.35),
+    0 0 120px rgba(200, 155, 60, 0.22),
     0 12px 56px -20px rgba(31, 42, 31, 0.4),
     var(--shadow-lg);
-}
-
-.product__frame--premium:hover::before {
-  opacity: 1;
 }
 
 /* ---------- CAROUSEL (Thumbnail scroller) ---------- */
@@ -469,13 +490,11 @@ body::after {
   box-shadow: 0 0 0 3px rgba(111, 175, 78, 0.2);
 }
 
-/* Premium active thumb — golden accent */
 .product--premium .product__thumb.is-active {
   border-color: var(--gold-mid);
   box-shadow: 0 0 0 3px rgba(200, 155, 60, 0.25);
 }
 
-/* Carousel arrow buttons */
 .carousel__btn {
   flex: 0 0 auto;
   width: 30px;
@@ -502,7 +521,6 @@ body::after {
   height: 15px;
 }
 
-/* Premium carousel arrows — golden hover */
 .product--premium .carousel__btn:hover {
   background: var(--gold-dark);
   color: #fff;
@@ -511,7 +529,6 @@ body::after {
 /* ---------- PRODUCT BODY ---------- */
 .product__body { max-width: 460px; }
 
-/* Premium product name — elegant gold-toned serif */
 .product--premium .product__name {
   font-family: var(--h-serif);
   font-size: clamp(2.1rem, 4.2vw, 3.1rem);
@@ -520,7 +537,6 @@ body::after {
   letter-spacing: 0.02em;
 }
 
-/* Basic product name — standard */
 .product--basic .product__name {
   font-family: var(--h-serif);
   font-size: clamp(2rem, 4vw, 3rem);
@@ -539,13 +555,10 @@ body::after {
   color: var(--primary);
 }
 
-/* Premium meta — golden tone */
 .product--premium .product__meta dt { color: #a68a4a; }
 .product--premium .product__meta dd { color: #8b6914; font-weight: 600; }
 
 .product__desc { color: #47543f; font-size: 1rem; }
-
-/* Premium description — slightly warmer */
 .product--premium .product__desc { color: #5a4a2f; }
 
 .product__foot { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-top: 30px; flex-wrap: wrap; }
@@ -566,17 +579,11 @@ body::after {
   letter-spacing: .1em;
 }
 
-/* Premium price — golden */
-.product--premium .product__price {
-  color: #8b6914;
-}
-.product--premium .product__price small {
-  color: #a68a4a;
-}
+.product--premium .product__price { color: #8b6914; }
+.product--premium .product__price small { color: #a68a4a; }
 
 .product__wa svg { width: 18px; height: 18px; }
 
-/* Premium WhatsApp button — golden gradient */
 .product__wa--premium {
   background: linear-gradient(135deg, #c9973a, #a67c28);
   box-shadow: 0 4px 18px rgba(180, 130, 40, 0.35);
@@ -586,6 +593,49 @@ body::after {
 .product__wa--premium:hover {
   background: linear-gradient(135deg, #d4a843, #b8862d);
   box-shadow: 0 6px 24px rgba(180, 130, 40, 0.45);
+}
+
+/* ---------- RESPONSIVE — Mobile: stack image on top, text below ---------- */
+@media (max-width: 980px) {
+  .product {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    overflow: visible;
+  }
+  /* On mobile: image first (top), text second (bottom) */
+  .product__media { order: 1; }
+  .product__body { order: 2; }
+  .product__body { max-width: none; }
+  .product-list { gap: 90px; }
+  .product-group { gap: 36px; }
+  .product-group::after { width: 50%; }
+  .product__version-badge { font-size: 0.95rem; }
+  .product__version-badge--premium { font-size: 1.08rem; }
+  .product__carousel { width: 100%; }
+  .product__thumb {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+  }
+}
+
+@media (max-width: 720px) {
+  .product-group { gap: 28px; }
+  .product-group::after { width: 70%; }
+  .product__version-badge {
+    font-size: 0.88rem;
+    padding: 6px 18px;
+  }
+  .product__version-badge--premium { font-size: 1rem; }
+  .product__frame--premium::before {
+    inset: -5px;
+    padding: 2px;
+  }
+  .product__thumb {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+  }
 }
 
 /* ---------- 11. ABOUT / FEATURES ---------- */
