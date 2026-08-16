@@ -132,6 +132,8 @@ window.addEventListener("scroll", () => {
 //   - "premium" = शिवात्मज – अलंकृत (golden, ornate)
 //   - "basic"   = शिवात्मज – सहज (simple, understated)
 //   - Comment out (/* ... */) the version you DON'T want for each product
+//   - premiumImages = images shown for premium version
+//   - basicImages   = images shown for basic version
 
 const PRODUCTS = [
   {
@@ -140,10 +142,11 @@ const PRODUCTS = [
     material: "Shadu mati",
     price: "₹3,499",
     description: "A serene, seated Bappa finished in warm earthen tones. Compact enough for the home altar, detailed enough to feel truly special.",
-    images: ["images/1.1.webp", "images/1.2.webp", "images/1.3.webp", "images/1.4.webp", "images/1.5.webp"],
+    premiumImages: ["images/1.1.webp", "images/1.2.webp"],
+    basicImages: [],
     versions: [
       "premium",
-      "basic",
+      /*"basic",*/
     ],
   },
   {
@@ -152,22 +155,11 @@ const PRODUCTS = [
     material: "Shadu mati",
     price: "₹2,499",
     description: "An elegant standing form with a flowing drape and gentle expression. Naturally pigmented, entirely free of plaster and chemical paint.",
-    images: ["images/2.1.webp", "images/2.2.webp", "images/2.3.webp", "images/2.4.webp"],
+    premiumImages: ["images/3.1.webp", "images/3.2.webp", "images/3.3.webp"],
+    basicImages: [],
     versions: [
       "premium",
-      /* "basic", */  // ← Only premium for this idol
-    ],
-  },
-  {
-    name: "Dagdusheth (दगडुशेठ)",
-    height: "12 inches",
-    material: "Shadu mati",
-    price: "₹2,499",
-    description: "Our statement idol for larger celebrations. Grand proportions, softly detailed ornamentation, and a finish that dissolves cleanly at visarjan.",
-    images: ["images/3.1.webp", "images/3.2.webp", "images/3.3.webp"],
-    versions: [
-      "premium",
-      "basic",
+      /* "basic", */
     ],
   },
   {
@@ -176,10 +168,11 @@ const PRODUCTS = [
     material: "Shadu mati",
     price: "₹3,499",
     description: "A little Bappa for desks, cars and gifting. Same honest clay, same handcrafted care — in a gentle, pocket-friendly size.",
-    images: ["images/4.1.webp", "images/4.2.webp", "images/4.3.webp"],
+    premiumImages: ["images/5.1.webp"],
+    basicImages: [],
     versions: [
-      /* "premium", */  // ← Only basic for this idol
-      "basic",
+      "premium",
+      /*"basic",*/
     ],
   },
   {
@@ -188,9 +181,10 @@ const PRODUCTS = [
     material: "Shadu mati",
     price: "₹1,499",
     description: "A little Bappa for desks, cars and gifting. Same honest clay, same handcrafted care — in a gentle, pocket-friendly size.",
-    images: ["images/5.1.webp", "images/5.2.webp", "images/5.3.webp"],
+    premiumImages: [],
+    basicImages: ["images/8.1.webp", "images/8.2.webp"],
     versions: [
-      "premium",
+      /*"premium",*/
       "basic",
     ],
   },
@@ -200,7 +194,8 @@ const PRODUCTS = [
     material: "Shadu mati",
     price: "₹1,799",
     description: "A little Bappa for desks, cars and gifting. Same honest clay, same handcrafted care — in a gentle, pocket-friendly size.",
-    images: ["images/6.1.webp", "images/6.2.webp", "images/6.3.webp"],
+    premiumImages: ["images/9.1.webp", "images/9.2.webp"],
+    basicImages: ["images/10.1.webp"],
     versions: [
       "premium",
       "basic",
@@ -212,9 +207,10 @@ const PRODUCTS = [
     material: "Shadu mati",
     price: "₹1,499",
     description: "A little Bappa for desks, cars and gifting. Same honest clay, same handcrafted care — in a gentle, pocket-friendly size.",
-    images: ["images/7.1.webp", "images/7.2.webp", "images/7.3.webp"],
+    premiumImages: [],
+    basicImages: ["images/12.1.webp", "images/12.2.webp"],
     versions: [
-      "premium",
+      /*"premium",*/
       "basic",
     ],
   },
@@ -224,9 +220,10 @@ const PRODUCTS = [
     material: "Shadu mati",
     price: "₹1,099",
     description: "A little Bappa for desks, cars and gifting. Same honest clay, same handcrafted care — in a gentle, pocket-friendly size.",
-    images: ["images/8.1.webp", "images/8.2.webp", "images/8.3.webp"],
+    premiumImages: ["images/13.1.webp"],
+    basicImages: ["images/14.1.webp", "images/14.2.webp", "images/14.3.webp"],
     versions: [
-      /* "premium", */
+      "premium",
       "basic",
     ],
   },
@@ -236,9 +233,23 @@ const PRODUCTS = [
     material: "Shadu mati",
     price: "₹1,499",
     description: "A little Bappa for desks, cars and gifting. Same honest clay, same handcrafted care — in a gentle, pocket-friendly size.",
-    images: ["images/9.1.webp", "images/9.2.webp", "images/9.3.webp"],
+    premiumImages: [],
+    basicImages: ["images/16.1.webp", "images/16.2.webp", "images/16.3.webp"],
     versions: [
-      "premium",
+      /* "premium",*/
+      "basic",
+    ],
+  },
+  {
+    name: "New ( )",
+    height: "10 inches",
+    material: "Shadu mati",
+    price: "₹1,099",
+    description: "A little Bappa for desks, cars and gifting. Same honest clay, same handcrafted care — in a gentle, pocket-friendly size.",
+    premiumImages: [],
+    basicImages: ["images/18.1.webp", "images/18.2.webp"],
+    versions: [
+      /* "premium",*/
       "basic",
     ],
   },
@@ -251,24 +262,24 @@ function waLink(product) {
 }
 
 function productMarkup(p, index) {
-  const thumbItems = p.images
-    .map((src, i) =>
-      `<button class="product__thumb${i === 0 ? " is-active" : ""}" data-index="${i}" data-testid="product-${index}-thumb-${i}" aria-label="View variation ${i + 1} of ${p.name}">
-        <img src="${src}" alt="${p.name} variation ${i + 1}" loading="lazy" />
-      </button>`
-    ).join("");
-
   let premiumHTML = "";
   let basicHTML = "";
 
   // Build premium version HTML if "premium" is in versions array
-  if (p.versions.includes("premium")) {
+  if (p.versions.includes("premium") && p.premiumImages.length > 0) {
+    const thumbItems = p.premiumImages
+      .map((src, i) =>
+        `<button class="product__thumb${i === 0 ? " is-active" : ""}" data-index="${i}" data-testid="product-${index}-thumb-${i}" aria-label="View variation ${i + 1} of ${p.name}">
+          <img src="${src}" alt="${p.name} variation ${i + 1}" loading="lazy" />
+        </button>`
+      ).join("");
+
     premiumHTML = `
     <article class="product product--premium reveal" data-product="${index}" data-testid="product-card-${index}-premium">
       <div class="product__version-badge product__version-badge--premium">शिवात्मज – अलंकृत</div>
       <div class="product__media">
         <div class="product__frame product__frame--premium">
-          <img class="product__main" src="${p.images[0]}" alt="${p.name} — premium eco-friendly clay Ganesha idol" data-testid="product-${index}-premium-main-image" loading="lazy" />
+          <img class="product__main" src="${p.premiumImages[0]}" alt="${p.name} — premium eco-friendly clay Ganesha idol" data-testid="product-${index}-premium-main-image" loading="lazy" />
         </div>
         <div class="product__carousel">
           <button class="carousel__btn carousel__btn--prev" aria-label="Previous variations" data-dir="prev">
@@ -299,13 +310,20 @@ function productMarkup(p, index) {
   }
 
   // Build basic version HTML if "basic" is in versions array
-  if (p.versions.includes("basic")) {
+  if (p.versions.includes("basic") && p.basicImages.length > 0) {
+    const thumbItems = p.basicImages
+      .map((src, i) =>
+        `<button class="product__thumb${i === 0 ? " is-active" : ""}" data-index="${i}" data-testid="product-${index}-thumb-${i}" aria-label="View variation ${i + 1} of ${p.name}">
+          <img src="${src}" alt="${p.name} variation ${i + 1}" loading="lazy" />
+        </button>`
+      ).join("");
+
     basicHTML = `
     <article class="product product--basic reveal" data-product="${index}" data-testid="product-card-${index}-basic">
       <div class="product__version-badge product__version-badge--basic">शिवात्मज – सहज</div>
       <div class="product__media">
         <div class="product__frame">
-          <img class="product__main" src="${p.images[0]}" alt="${p.name} — basic eco-friendly clay Ganesha idol" data-testid="product-${index}-basic-main-image" loading="lazy" />
+          <img class="product__main" src="${p.basicImages[0]}" alt="${p.name} — basic eco-friendly clay Ganesha idol" data-testid="product-${index}-basic-main-image" loading="lazy" />
         </div>
         <div class="product__carousel">
           <button class="carousel__btn carousel__btn--prev" aria-label="Previous variations" data-dir="prev">
@@ -353,6 +371,9 @@ function renderProducts() {
 
   list.querySelectorAll(".product").forEach((card) => {
     const idx = Number(card.dataset.product);
+    const isPremium = card.classList.contains("product--premium");
+    const productImages = isPremium ? PRODUCTS[idx].premiumImages : PRODUCTS[idx].basicImages;
+    
     const main = card.querySelector(".product__main");
     const thumbsContainer = card.querySelector(".product__thumbs");
     const thumbs = card.querySelectorAll(".product__thumb");
@@ -362,7 +383,7 @@ function renderProducts() {
     thumbs.forEach((thumb) => {
       thumb.addEventListener("click", () => {
         const i = Number(thumb.dataset.index);
-        const newSrc = PRODUCTS[idx].images[i];
+        const newSrc = productImages[i];
         if (main.src === newSrc) return;
         main.classList.add("is-fading");
         setTimeout(() => { main.src = newSrc; main.classList.remove("is-fading"); }, 260);
